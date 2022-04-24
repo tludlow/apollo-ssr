@@ -3,6 +3,7 @@ import Document from "next/document";
 import { getDataFromTree } from "@apollo/client/react/ssr";
 import { getApolloClient } from "../lib/apollo";
 import { ApolloProvider } from "@apollo/client";
+import { ServerStyleSheet } from "styled-components";
 
 class DocumentWithApollo extends Document {
   // Reference: https://gist.github.com/Tylerian/16d48e5850b407ba9e3654e17d334c1e
@@ -17,6 +18,8 @@ class DocumentWithApollo extends Document {
   }
 
   static async getInitialProps(ctx: any) {
+    const sheet = new ServerStyleSheet();
+    const originalRenderPage = ctx.renderPage;
     /**
      * Initialize and get a reference to ApolloClient, which is saved in a "global" variable.
      * The same client instance is returned to any other call to `getApolloClient`, so _app.js gets the same authenticated client to give to ApolloProvider.
@@ -33,6 +36,12 @@ class DocumentWithApollo extends Document {
       </ApolloProvider>
     );
 
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: (App: any) => (props: any) =>
+          sheet.collectStyles(<App {...props} />),
+      });
+
     /**
      * Render the page as normal, but now that ApolloClient is initialized and the cache is full, each query will actually work.
      */
@@ -43,7 +52,16 @@ class DocumentWithApollo extends Document {
      */
     const apolloState = apolloClient.extract();
 
-    return { ...initialProps, apolloState };
+    return {
+      ...initialProps,
+      styles: (
+        <>
+          {initialProps.styles}
+          {sheet.getStyleElement()}
+        </>
+      ),
+      apolloState,
+    };
   }
 }
 

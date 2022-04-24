@@ -4,6 +4,11 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from "next";
 import MessageList from "../components/MessageList";
+import styled from "styled-components";
+
+const ColouredText = styled.p`
+  color: red;
+`;
 
 const QUERY = gql`
   query GetUser($getUserId: ID!) {
@@ -36,10 +41,10 @@ export default function IndexPage() {
   return (
     <div>
       <p>{t("router")}</p>
-      <p>
+      <ColouredText>
         <span>This pages data was fetched on the: </span>
         <strong>{cached ? "Next.js server" : "client"}</strong>.
-      </p>
+      </ColouredText>
       <p>{JSON.stringify(data)}</p>
       <MessageList />
     </div>
