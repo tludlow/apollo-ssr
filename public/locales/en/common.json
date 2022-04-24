@@ -1,4 +1,5 @@
 {
   "welcome": "welcome to the app, this app uses apollo ssr queries without duplicating the queries multiple times!",
-  "nested": "This allows you to seperate the data to the component again, like so: "
+  "nested": "This allows you to seperate the data to the component again, like so: ",
+  "router": "This example shows that you can still use the router to get your information whilst on the server"
 }

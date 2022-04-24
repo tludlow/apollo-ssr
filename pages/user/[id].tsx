@@ -3,7 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from "next";
-import MessageList from "../components/MessageList";
+import { useRouter } from "next/router";
 
 const QUERY = gql`
   query GetUser($getUserId: ID!) {
@@ -19,9 +19,11 @@ const QUERY = gql`
 
 export default function IndexPage() {
   const { t } = useTranslation("common");
+  const router = useRouter();
+  console.log(router);
   const { data, loading } = useQuery(QUERY, {
     variables: {
-      getUserId: "0438e243-2a4f-4561-a5e2-9ed1f3f5617f",
+      getUserId: router.query.id,
     },
     ssr: true,
   });
@@ -41,7 +43,6 @@ export default function IndexPage() {
         <strong>{cached ? "Next.js server" : "client"}</strong>.
       </p>
       <p>{JSON.stringify(data)}</p>
-      <MessageList />
     </div>
   );
 }
