@@ -17,13 +17,3 @@ export function getApolloClient(forceNew?: boolean) {
 
   return CLIENT;
 }
-
-export const QUERY = gql`
-  query Messages {
-    messages {
-      id
-      title
-      body
-    }
-  }
-`;

@@ -1,13 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
-import { QUERY } from "../lib/apollo";
+import { gql, useQuery } from "@apollo/client";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { GetServerSideProps } from "next";
+import MessageList from "../components/MessageList";
+
+const QUERY = gql`
+  query GetUser($getUserId: ID!) {
+    getUser(id: $getUserId) {
+      id
+      lastName
+      email
+      createdAt
+      updatedAt
+    }
+  }
+`;
 
 export default function IndexPage() {
   const { t } = useTranslation("common");
-  const { data, loading, error } = useQuery(QUERY, { ssr: true });
+  const { data, loading } = useQuery(QUERY, {
+    variables: {
+      getUserId: "0438e243-2a4f-4561-a5e2-9ed1f3f5617f",
+    },
+    ssr: true,
+  });
 
   const [cached, setCached] = useState(true);
   useEffect(() => {
@@ -20,16 +37,16 @@ export default function IndexPage() {
     <div>
       <p>{t("welcome")}</p>
       <p>
-        This pages data was fetched on the{" "}
+        <span>This pages data was fetched on the: </span>
         <strong>{cached ? "Next.js server" : "client"}</strong>.
       </p>
       <p>{JSON.stringify(data)}</p>
+      <MessageList />
     </div>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  console.log(ctx.locale);
   return {
     props: {
       ...(await serverSideTranslations(ctx.locale || "en", ["common"])),
