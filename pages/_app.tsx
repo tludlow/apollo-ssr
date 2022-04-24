@@ -1,4 +1,5 @@
 import { ApolloProvider } from "@apollo/client";
+import { appWithTranslation } from "next-i18next";
 import { AppProps } from "next/app";
 import { getApolloClient } from "../lib/apollo";
 import "../styles/globals.css";
@@ -13,4 +14,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

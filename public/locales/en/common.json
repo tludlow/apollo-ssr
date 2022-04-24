@@ -1,0 +1,3 @@
+{
+  "welcome": "welcome to the app, this app uses apollo ssr queries without duplicating the queries multiple times!"
+}
